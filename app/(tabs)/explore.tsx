@@ -1,112 +1,203 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { router } from "expo-router";
+import React, { useState } from "react";
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-export default function TabTwoScreen() {
+const mushrooms = [
+  {
+    id: "1",
+    name: "Chanterelle",
+    type: "Edible",
+    scientific: "Cantharellus cibarius",
+    image: require("../../assets/images/chanterelle.jpg"),
+  },
+  {
+    id: "2",
+    name: "Death Cap",
+    type: "Poisonous",
+    scientific: "Amanita phalloides",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/0/02/Amanita_phalloides.jpg",
+  },
+  {
+    id: "3",
+    name: "Lion's Mane",
+    type: "Edible",
+    scientific: "Hericium erinaceus",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/0/09/Hericium_erinaceus.jpg",
+  },
+  {
+    id: "4",
+    name: "Fly Agaric",
+    type: "Poisonous",
+    scientific: "Amanita_muscaria",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/3/32/Amanita_muscaria_3_vliegenzwammen_op_rij.jpg",
+  },
+];
+
+export default function ExploreScreen() {
+  const [search, setSearch] = useState("");
+
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const filteredMushrooms = mushrooms.filter((item) => {
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === "All" ? true : item.type === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Explore Mushrooms</Text>
+
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search mushrooms..."
+        value={search}
+        onChangeText={setSearch}
+      />
+
+      <View style={styles.filterRow}>
+        {["All", "Edible", "Poisonous"].map((category) => (
+          <TouchableOpacity
+            key={category}
+            style={[
+              styles.filterChip,
+
+              selectedCategory === category && styles.activeChip,
+            ]}
+            onPress={() => setSelectedCategory(category)}
+          >
+            <Text
+              style={{
+                color: selectedCategory === category ? "#fff" : "#111827",
+                fontWeight: "600",
+              }}
+            >
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <FlatList
+        data={filteredMushrooms}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() =>
+              router.push({
+                pathname: "/mushroom-details",
+                params: {
+                  name: item.name,
+                  scientific: item.scientific,
+                  type: item.type,
+                },
+              })
+            }
+          >
+            <Image source={item.image} style={styles.image} />
+            <Text style={styles.name}>{item.name}</Text>
+
+            <Text style={styles.scientific}>{item.scientific}</Text>
+
+            <Text
+              style={[
+                styles.type,
+                {
+                  color: item.type === "Poisonous" ? "#DC2626" : "#2D6A4F",
+                },
+              ]}
+            >
+              {item.type}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: "#F7FAF8",
+    padding: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  image: {
+    width: "100%",
+    height: 180,
+    borderRadius: 16,
+    marginBottom: 12,
+  },
+
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginTop: 60,
+    marginBottom: 20,
+  },
+
+  searchInput: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+  },
+
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 18,
+    borderRadius: 20,
+    marginBottom: 12,
+  },
+
+  name: {
+    fontSize: 18,
+    fontWeight: "700",
+  },
+
+  scientific: {
+    color: "#6B7280",
+    marginTop: 4,
+  },
+
+  type: {
+    marginTop: 8,
+    fontWeight: "700",
+  },
+  filterRow: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+
+  filterChip: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+
+  activeChip: {
+    backgroundColor: "#2D6A4F",
   },
 });
