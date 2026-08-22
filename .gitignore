@@ -46,3 +46,7 @@ app-example/
 
 # Firebase Admin Secret Key
 backend/serviceAccountKey.json
+
+# Python
+__pycache__/
+*.py[cod]

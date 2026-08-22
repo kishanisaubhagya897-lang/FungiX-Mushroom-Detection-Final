@@ -1,9 +1,10 @@
 // Full production-ready app/(tabs)/main.tsx
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useFocusEffect } from "expo-router";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
@@ -16,10 +17,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../firebaseConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { auth } from "../../firebaseConfig";
-
+import { auth, db } from "../../firebaseConfig";
 
 type Detection = {
   id: string;
@@ -30,19 +28,15 @@ type Detection = {
 };
 
 export default function MainScreen() {
- 
   const [edibleCount, setEdibleCount] = useState(0);
 
   const [poisonousCount, setPoisonousCount] = useState(0);
   const [detections, setDetections] = useState<Detection[]>([]);
-   const [profileImage, setProfileImage] =
-  useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadCounts = async () => {
     const snapshot = await getDocs(collection(db, "detections"));
-
-
 
     let edible = 0;
     let poisonous = 0;
@@ -66,12 +60,21 @@ export default function MainScreen() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const snapshot = await getDocs(collection(db, "detections"));
+
+      const q = query(
+        collection(db, "detections"),
+        orderBy("scanDate", "desc"),
+        limit(3),
+      );
+
+      const snapshot = await getDocs(q);
+
       const items = snapshot.docs.map((d) => ({
         id: d.id,
         ...d.data(),
       })) as Detection[];
-      setDetections(items.reverse().slice(0, 3));
+
+      setDetections(items);
     } catch (e) {
       console.log(e);
     } finally {
@@ -79,28 +82,27 @@ export default function MainScreen() {
     }
   };
 
-      const loadProfileImage = async () => {
-  try {
-    const image =
-      await AsyncStorage.getItem(
-        `profileImage_${auth.currentUser?.uid}`
+  const loadProfileImage = async () => {
+    try {
+      const image = await AsyncStorage.getItem(
+        `profileImage_${auth.currentUser?.uid}`,
       );
 
-    if (image) {
-      setProfileImage(image);
+      if (image) {
+        setProfileImage(image);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  };
 
- useFocusEffect(
-  useCallback(() => {
-    fetchDashboardData();
-    loadCounts();
-    loadProfileImage();
-  }, []),
-);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDashboardData();
+      loadCounts();
+      loadProfileImage();
+    }, []),
+  );
 
   const takePhoto = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
@@ -110,12 +112,12 @@ export default function MainScreen() {
       quality: 1,
     });
     if (!result.canceled) {
-   router.push({
-  pathname: "/morphological-features",
-  params: {
-    image: result.assets[0].uri,
-  },
-});
+      router.push({
+        pathname: "/morphological-features",
+        params: {
+          image: result.assets[0].uri,
+        },
+      });
     }
   };
 
@@ -126,11 +128,11 @@ export default function MainScreen() {
     });
     if (!result.canceled) {
       router.push({
-  pathname: "/morphological-features",
-  params: {
-    image: result.assets[0].uri,
-  },
-});
+        pathname: "/morphological-features",
+        params: {
+          image: result.assets[0].uri,
+        },
+      });
     }
   };
 
@@ -192,23 +194,19 @@ export default function MainScreen() {
                     color="#222"
                   />
                 </TouchableOpacity>
-              <TouchableOpacity
-  style={styles.profileBtn}
-  onPress={() => router.push("/profile")}
->
-  {profileImage ? (
-    <Image
-      source={{ uri: profileImage }}
-      style={styles.profileImage}
-    />
-  ) : (
-    <Ionicons
-      name="person"
-      size={28}
-      color="#fff"
-    />
-  )}
-</TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.profileBtn}
+                  onPress={() => router.push("/profile")}
+                >
+                  {profileImage ? (
+                    <Image
+                      source={{ uri: profileImage }}
+                      style={styles.profileImage}
+                    />
+                  ) : (
+                    <Ionicons name="person" size={28} color="#fff" />
+                  )}
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -433,20 +431,20 @@ const styles = StyleSheet.create({
   badgeText: { color: "#fff", fontWeight: "700", fontSize: 12 },
   empty: { textAlign: "center", color: "#6B7280", marginTop: 20 },
   profileImage: {
-  width: 55,
-  height: 55,
-  borderRadius: 28,
-},
-profileBtn: {
-  width: 55,
-  height: 55,
-  borderRadius: 28,
+    width: 55,
+    height: 55,
+    borderRadius: 28,
+  },
+  profileBtn: {
+    width: 55,
+    height: 55,
+    borderRadius: 28,
 
-  backgroundColor: "#2D6A4F",
+    backgroundColor: "#2D6A4F",
 
-  justifyContent: "center",
-  alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
 
-  overflow: "hidden",
-},
+    overflow: "hidden",
+  },
 });

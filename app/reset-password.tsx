@@ -43,20 +43,20 @@ export default function ResetPassword() {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        "http://10.104.100.238:5000/reset-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            otp,
-            newPassword,
-          }),
-        },
-      );
+    const response = await fetch(
+  "http://10.174.177.238:5000/reset-password",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      otp,
+      newPassword,
+    }),
+  }
+);
 
       const text = await response.text();
 

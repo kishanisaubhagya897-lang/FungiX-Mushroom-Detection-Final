@@ -24,24 +24,21 @@ const mushrooms = [
     name: "Death Cap",
     type: "Poisonous",
     scientific: "Amanita phalloides",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/0/02/Amanita_phalloides.jpg",
+    image: require("../../assets/images/chanterelle.jpg"),
   },
   {
     id: "3",
     name: "Lion's Mane",
     type: "Edible",
     scientific: "Hericium erinaceus",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/0/09/Hericium_erinaceus.jpg",
+     image: require("../../assets/images/chanterelle.jpg"),
   },
   {
     id: "4",
     name: "Fly Agaric",
     type: "Poisonous",
     scientific: "Amanita_muscaria",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/3/32/Amanita_muscaria_3_vliegenzwammen_op_rij.jpg",
+     image: require("../../assets/images/chanterelle.jpg"),
   },
 ];
 

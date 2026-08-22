@@ -92,6 +92,7 @@ export default function HistoryScreen() {
   };
 
   const renderItem = ({ item }: { item: Detection }) => {
+    console.log("History Image URL:", item.imageUrl);
     const badgeColor = item.type === "Poisonous" ? "#E76F51" : "#52B788";
 
     return (
@@ -189,8 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 20,
-    alignItems: "center",
-    paddingLeft: 90,
   },
   card: {
     flexDirection: "row",

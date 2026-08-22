@@ -14,13 +14,30 @@ import { Ionicons } from "@expo/vector-icons";
 export default function DetailsScreen() {
   const params = useLocalSearchParams();
 
+  const prediction =
+  typeof params.prediction === "string"
+    ? params.prediction
+    : params.prediction?.[0];
+
+const isPoisonous = prediction === "p";
+
   const image =
     typeof params.image === "string"
       ? params.image
       : params.image?.[0];
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView
+  style={[
+    styles.container,
+    {
+      backgroundColor: isPoisonous
+        ? "#7F1D1D"
+        : "#081C15",
+    },
+  ]}
+  edges={["top"]}
+>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -50,7 +67,11 @@ export default function DetailsScreen() {
         />
 
         {/* TITLE */}
-        <Text style={styles.name}>Chanterelle Mushroom</Text>
+       <Text style={styles.name}>
+  {isPoisonous
+    ? "Poisonous Mushroom"
+    : "Edible Mushroom"}
+</Text>
 
         <View style={styles.scientificRow}>
         <Ionicons
@@ -59,12 +80,23 @@ export default function DetailsScreen() {
   color="#A8D5BA"
 />
           <Text style={styles.scientific}>
-            Cantharellus cibarius
-          </Text>
+  {isPoisonous
+    ? "Potentially Toxic Species"
+    : "Cantharellus cibarius"}
+</Text>
         </View>
 
         {/* DESCRIPTION */}
-        <View style={styles.card}>
+       <View
+  style={[
+    styles.card,
+    {
+      backgroundColor: isPoisonous
+        ? "#991B1B"
+        : "#1B4332",
+    },
+  ]}
+>
           <View style={styles.cardHeader}>
             <Ionicons
               name="document-text-outline"
@@ -74,14 +106,24 @@ export default function DetailsScreen() {
             <Text style={styles.cardTitle}>Description</Text>
           </View>
 
-          <Text style={styles.cardText}>
-            Chanterelle mushrooms are edible mushrooms known for
-            their golden yellow color, fruity aroma, and rich taste.
-          </Text>
+         <Text style={styles.cardText}>
+  {isPoisonous
+    ? "This mushroom has been classified as potentially poisonous by the AI model. Consumption is not recommended."
+    : "This mushroom has been classified as edible by the AI model and appears safe based on the selected features."}
+</Text>
         </View>
 
         {/* HABITAT */}
-        <View style={styles.card}>
+        <View
+  style={[
+    styles.card,
+    {
+      backgroundColor: isPoisonous
+        ? "#991B1B"
+        : "#1B4332",
+    },
+  ]}
+>
           <View style={styles.cardHeader}>
             <Ionicons
               name="leaf-outline"
@@ -98,7 +140,16 @@ export default function DetailsScreen() {
         </View>
 
         {/* SEASON */}
-        <View style={styles.card}>
+       <View
+  style={[
+    styles.card,
+    {
+      backgroundColor: isPoisonous
+        ? "#991B1B"
+        : "#1B4332",
+    },
+  ]}
+>
           <View style={styles.cardHeader}>
             <Ionicons
               name="sunny-outline"
@@ -114,7 +165,16 @@ export default function DetailsScreen() {
         </View>
 
         {/* CONDITIONS */}
-        <View style={styles.card}>
+    <View
+  style={[
+    styles.card,
+    {
+      backgroundColor: isPoisonous
+        ? "#991B1B"
+        : "#1B4332",
+    },
+  ]}
+>
           <View style={styles.cardHeader}>
             <Ionicons
               name="rainy-outline"

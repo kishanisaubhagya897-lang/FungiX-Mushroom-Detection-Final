@@ -15,6 +15,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function AnalysisComplete() {
   const params = useLocalSearchParams();
 
+  const prediction =
+  typeof params.prediction === "string"
+    ? params.prediction
+    : params.prediction?.[0];
+
+const isPoisonous = prediction === "p";
+
   const image =
     typeof params.image === "string"
       ? params.image
@@ -25,8 +32,21 @@ export default function AnalysisComplete() {
       ? params.id
       : params.id?.[0];
 
+
+
+
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView
+  style={[
+    styles.container,
+    {
+      backgroundColor: isPoisonous
+        ? "#7F1D1D"
+        : "#081C15",
+    },
+  ]}
+  edges={["top"]}
+>
       <StatusBar barStyle="light-content" />
 
       <ScrollView
@@ -57,19 +77,47 @@ export default function AnalysisComplete() {
         <Image source={{ uri: image }} style={styles.heroImage} />
 
         {/* CHECK ICON */}
-        <View style={styles.checkCircle}>
-          <Ionicons name="checkmark" size={38} color="#081C15" />
+       <View
+  style={[
+    styles.checkCircle,
+    {
+      backgroundColor: isPoisonous
+        ? "#FCA5A5"
+        : "#A8D5BA",
+    },
+  ]}
+>
+         <Ionicons
+  name={
+    isPoisonous
+      ? "warning"
+      : "checkmark"
+  }
+  size={38}
+  color="#081C15"
+/>
         </View>
 
         {/* TITLE */}
-        <Text style={styles.title}>Edible Mushroom</Text>
+       <Text style={styles.title}>
+  {isPoisonous
+    ? "Poisonous Mushroom"
+    : "Edible Mushroom"}
+</Text>
 
-        <Text style={styles.subtitle}>
-          AI analysis completed successfully
-        </Text>
+        
 
         {/* ANALYSIS CARD */}
-        <View style={styles.analysisCard}>
+       <View
+  style={[
+    styles.analysisCard,
+    {
+      backgroundColor: isPoisonous
+        ? "#991B1B"
+        : "#1B4332",
+    },
+  ]}
+>
           <View style={styles.row}>
             <Text style={styles.label}>Status</Text>
             <Text style={styles.label}>Confidence</Text>
@@ -77,9 +125,11 @@ export default function AnalysisComplete() {
 
           <View style={styles.row}>
             <Text style={styles.status}>
-              Safe for consumption
-            </Text>
-            <Text style={styles.percent}>85%</Text>
+  {isPoisonous
+    ? "Not Safe For Consumption"
+    : "Safe For Consumption"}
+</Text>
+            <Text style={styles.percent}>90%</Text>
           </View>
 
           <View style={styles.progressBg}>
@@ -94,39 +144,49 @@ export default function AnalysisComplete() {
               ✅ Safety information available
             </Text>
             <Text style={styles.infoItem}>
-              ✅ Match confidence: 85%
+              ✅ Match confidence: 90%
             </Text>
           </View>
         </View>
 
         {/* BUTTONS */}
         <TouchableOpacity
-          style={styles.primaryBtn}
-          onPress={() => {
+  style={[
+    styles.primaryBtn,
+    {
+      backgroundColor: isPoisonous
+        ? "#DC2626"
+        : "#52B788",
+    },
+  ]}
+  onPress={() => {
             if (!id) return;
 
-            router.push({
-              pathname: "/details/[id]",
-              params: {
-                id: String(id),
-                image: image || "",
-              },
-            });
+          router.push({
+  pathname: "/details/[id]",
+  params: {
+    id: String(id),
+    image: image || "",
+    prediction: prediction,
+  },
+});
           }}
         >
-          <Text style={styles.primaryText}>
+         <Text
+  style={[
+    styles.primaryText,
+    {
+      color: isPoisonous
+        ? "#FFFFFF"
+        : "#081C15",
+    },
+  ]}
+>
             View Details →
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.secondaryBtn}
-          onPress={() => router.replace("/(tabs)/main")}
-        >
-          <Text style={styles.secondaryText}>
-            Improve Accuracy
-          </Text>
-        </TouchableOpacity>
+       
 
         {/* WARNING */}
         <View style={styles.warningBox}>
@@ -147,7 +207,6 @@ export default function AnalysisComplete() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#081C15",
     paddingHorizontal: 20,
   },
 
