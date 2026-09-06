@@ -1,0 +1,4 @@
+backend/models/*.pth filter=lfs diff=lfs merge=lfs -text
+backend/models/*.joblib filter=lfs diff=lfs merge=lfs -text
+backend/models/*.safetensors filter=lfs diff=lfs merge=lfs -text
+backend/models/clip_gate/*.safetensors filter=lfs diff=lfs merge=lfs -text

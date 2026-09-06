@@ -16,7 +16,7 @@ const mushrooms = [
     id: "1",
     name: "Chanterelle",
     type: "Edible",
-    scientific: "Cantharellus cibarius",
+    scientific: "Species not determined by this model",
     image: require("../../assets/images/chanterelle.jpg"),
   },
   {

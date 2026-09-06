@@ -1,15 +1,15 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   Image,
-  TouchableOpacity,
   ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useLocalSearchParams, router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AnalysisComplete() {
@@ -28,9 +28,18 @@ const isPoisonous = prediction === "p";
       : params.image?.[0];
 
   const id =
-    typeof params.id === "string"
-      ? params.id
-      : params.id?.[0];
+  typeof params.id === "string"
+    ? params.id
+    : params.id?.[0];
+
+const confidenceValue =
+  typeof params.confidence === "string"
+    ? Number(params.confidence)
+    : Number(params.confidence?.[0] || 0);
+
+const confidencePercent = Math.round(
+  confidenceValue * 100,
+);
 
 
 
@@ -126,25 +135,34 @@ const isPoisonous = prediction === "p";
           <View style={styles.row}>
             <Text style={styles.status}>
   {isPoisonous
-    ? "Not Safe For Consumption"
-    : "Safe For Consumption"}
+    ? "Model Prediction: Poisonous"
+    : "Model Prediction: Edible"}
 </Text>
-            <Text style={styles.percent}>90%</Text>
+            <Text style={styles.percent}>
+              {confidencePercent}%
+            </Text>
           </View>
 
           <View style={styles.progressBg}>
-            <View style={styles.progressFill} />
+            <View
+              style={[
+                styles.progressFill,
+                {
+                  width: `${confidencePercent}%`,
+                },
+              ]}
+            />
           </View>
 
           <View style={styles.infoList}>
             <Text style={styles.infoItem}>
-              ✅ Species identified successfully
+              ✅ Edibility classification completed
             </Text>
             <Text style={styles.infoItem}>
               ✅ Safety information available
             </Text>
             <Text style={styles.infoItem}>
-              ✅ Match confidence: 90%
+              ✅ Match confidence: {confidencePercent}%
             </Text>
           </View>
         </View>

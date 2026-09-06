@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useLocalSearchParams, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Result() {
   const params = useLocalSearchParams();
@@ -29,7 +29,7 @@ export default function Result() {
           {/* Result Card */}
           <View style={styles.card}>
             <Text style={styles.title}>🍄 Edible Mushroom</Text>
-            <Text style={styles.sub}>Safe for consumption</Text>
+            <Text style={styles.sub}>Model prediction: Edible</Text>
 
             <View style={styles.progressBg}>
               <View style={styles.progressFill} />

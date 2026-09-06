@@ -50,3 +50,10 @@ backend/serviceAccountKey.json
 # Python
 __pycache__/
 *.py[cod]
+# ML / temporary files
+backend/clip_gate.zip
+backend/main_before_*.py
+backend/main_old_backup.py
+backend/morphological-features.txt
+
+backend/models/clip_gate.zip

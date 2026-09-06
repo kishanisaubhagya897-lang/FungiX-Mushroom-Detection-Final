@@ -1,0 +1,120 @@
+{
+    "artifact_type": "XGBoost categorical morphology mapping",
+    "model": "XGBoost_domain_adapted_exact54.json",
+    "class_mapping": {
+        "0": "Edible",
+        "1": "Poisonous"
+    },
+    "feature_order": [
+        "cap-shape",
+        "cap-color",
+        "cap-surface",
+        "gill-attachment",
+        "ring-number",
+        "stalk-root",
+        "gill-color",
+        "stalk-shape"
+    ],
+    "category_source": [
+        "original source morphology",
+        "126 development specimens"
+    ],
+    "protected_54_used_for_categories": false,
+    "protected_54_used_for_training": false,
+    "protected_54_used_for_tuning": false,
+    "missing_value_policy": "Retain missing values as NaN; XGBoost handles missing values natively.",
+    "categories": {
+        "cap-shape": [
+            "x",
+            "b",
+            "s",
+            "f",
+            "k",
+            "c",
+            "u",
+            "q",
+            "d",
+            "a"
+        ],
+        "cap-color": [
+            "n",
+            "y",
+            "w",
+            "g",
+            "e",
+            "p",
+            "b",
+            "u",
+            "c",
+            "r",
+            "j",
+            "o",
+            "i",
+            "d",
+            "z",
+            "k"
+        ],
+        "cap-surface": [
+            "s",
+            "y",
+            "f",
+            "g",
+            "u",
+            "q",
+            "t",
+            "w",
+            "h",
+            "v",
+            "a"
+        ],
+        "gill-attachment": [
+            "f",
+            "x",
+            "d",
+            "n",
+            "a",
+            "c",
+            "s"
+        ],
+        "ring-number": [
+            "o",
+            "t",
+            "n"
+        ],
+        "stalk-root": [
+            "e",
+            "c",
+            "b",
+            "r",
+            "f",
+            "z"
+        ],
+        "gill-color": [
+            "k",
+            "n",
+            "g",
+            "p",
+            "w",
+            "h",
+            "u",
+            "e",
+            "b",
+            "r",
+            "y",
+            "o",
+            "x",
+            "q",
+            "d",
+            "m",
+            "i",
+            "j",
+            "l"
+        ],
+        "stalk-shape": [
+            "e",
+            "q",
+            "a",
+            "t"
+        ]
+    }
+}

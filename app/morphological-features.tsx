@@ -52,48 +52,50 @@ const FEATURES: Feature[] = [
     title: {
       en: "Cap Shape",
       ta: "தொப்பி வடிவம்",
-      si: "තොප්පි හැඩය",
+      si: "තොප්පියේ හැඩය",
     },
     subtitle: {
       en: "Identify the overall shape of the mushroom cap.",
-      ta: "காளானின் தொப்பியின் ஒட்டுமொத்த வடிவத்தைத் தேர்ந்தெடுக்கவும்.",
-      si: "බිම්මල් තොප්පියේ සමස්ත හැඩය හඳුනා ගන්න.",
+      ta: "කாளானின் தொப்பியின் ஒட்டுமொத்த வடிவத்தைத் தேர்ந்தெடுக்கவும்.",
+      si: "බිම්මලේ තොප්පියේ සමස්ත හැඩය හඳුනා ගන්න.",
     },
     options: [
       {
-        value: "convex",
+        value: "b",
+        en: "Bell",
+        ta: "மணி வடிவம்",
+        si: "සීනු හැඩය",
+      },
+      {
+        value: "c",
+        en: "Conical",
+        ta: "கூம்பு வடிவம்",
+        si: "කේතු හැඩය",
+      },
+      {
+        value: "x",
         en: "Convex",
-        ta: "வளைந்த குவிமாடம்",
+        ta: "குவிந்த",
         si: "උත්තල / ගෝලාකාර",
         description: "Rounded dome",
       },
       {
-        value: "flat",
+        value: "f",
         en: "Flat",
         ta: "தட்டையான",
         si: "සමතලා",
-        description: "Plane surface",
       },
       {
-        value: "conical",
-        en: "Conical",
-        ta: "கூம்பு வடிவம்",
-        si: "කේතු හැඩය",
-        description: "Pointed",
+        value: "k",
+        en: "Knobbed",
+        ta: "குமிழ் வடிவம்",
+        si: "ගැටිති සහිත",
       },
       {
-        value: "funnel",
-        en: "Funnel-shaped",
-        ta: "புனல் வடிவம்",
-        si: "පුනීල හැඩය",
-        description: "Funnel-like",
-      },
-      {
-        value: "irregular",
-        en: "Irregular / lobed",
-        ta: "ஒழுங்கற்ற / மடல் வடிவம்",
-        si: "අක්‍රමවත් / කොටස් සහිත",
-        description: "Uneven or lobed",
+        value: "s",
+        en: "Sunken",
+        ta: "உள்ளிழிந்த",
+        si: "ඇතුළට ගිලුණු",
       },
     ],
   },
@@ -107,51 +109,69 @@ const FEATURES: Feature[] = [
     },
     subtitle: {
       en: "Select the dominant visible color of the cap.",
-      ta: "தொப்பியில் தென்படும் முக்கிய நிறத்தைத் தேர்ந்தெடுக்கவும்.",
+      ta: "தொப்பியில் காணப்படும் முக்கிய நிறத்தைத் தேர்ந்தெடுக்கவும்.",
       si: "තොප්පියේ ප්‍රධාන පෙනෙන වර්ණය තෝරන්න.",
     },
     options: [
       {
-        value: "orange-red",
-        en: "Orange / Red",
-        ta: "செம்மஞ்சள் / சிவப்பு",
-        si: "තැඹිලි / රතු",
-        description: "Orange-red",
-      },
-      {
-        value: "yellow",
-        en: "Yellow / Pale Yellow",
-        ta: "மஞ்சள் / வெளிர் மஞ்சள்",
-        si: "කහ / ලා කහ",
-        description: "Pale yellow",
-      },
-      {
-        value: "brown",
+        value: "n",
         en: "Brown",
         ta: "பழுப்பு",
         si: "දුඹුරු",
-        description: "Brown / reddish-brown",
       },
       {
-        value: "white",
-        en: "White / Cream",
-        ta: "வெள்ளை / கிரீம்",
-        si: "සුදු / ක්‍රීම්",
-        description: "White, cream or pale grey",
+        value: "b",
+        en: "Buff",
+        ta: "மங்கலான மஞ்சள்-பழுப்பு",
+        si: "ලා කහ-දුඹුරු",
       },
       {
-        value: "purple-green",
-        en: "Purple / Violet / Green",
-        ta: "ஊதா / வயலெட் / பச்சை",
-        si: "දම් / වයලට් / කොළ",
-        description: "Mixed unusual colors",
+        value: "c",
+        en: "Cinnamon",
+        ta: "இலவங்கப்பட்டை நிறம்",
+        si: "කුරුඳු වර්ණය",
       },
       {
-        value: "pink",
+        value: "g",
+        en: "Gray",
+        ta: "சாம்பல்",
+        si: "අළු",
+      },
+      {
+        value: "r",
+        en: "Green",
+        ta: "பச்சை",
+        si: "කොළ",
+      },
+      {
+        value: "p",
         en: "Pink",
         ta: "இளஞ்சிவப்பு",
         si: "රෝස",
-        description: "Pink",
+      },
+      {
+        value: "u",
+        en: "Purple",
+        ta: "ஊதா",
+        si: "දම්",
+      },
+      {
+        value: "e",
+        en: "Red",
+        ta: "சிவப்பு",
+        si: "රතු",
+      },
+      {
+        value: "w",
+        en: "White",
+        ta: "வெள்ளை",
+        si: "සුදු",
+      },
+      {
+        value: "y",
+        en: "Yellow",
+        ta: "மஞ்சள்",
+        si: "කහ",
       },
     ],
   },
@@ -159,46 +179,39 @@ const FEATURES: Feature[] = [
   {
     key: "capSurfaceTexture",
     title: {
-      en: "Cap Surface Texture",
-      ta: "தொப்பியின் மேற்பரப்பு அமைப்பு",
-      si: "තොප්පි මතුපිටේ වයනය",
+      en: "Cap Surface",
+      ta: "தொப்பியின் மேற்பரப்பு",
+      si: "තොප්පියේ මතුපිට",
     },
     subtitle: {
-      en: "Observe the texture and surface characteristics.",
-      ta: "தொப்பியின் மேற்பரப்பின் தன்மையை கவனித்து தேர்ந்தெடுக்கவும்.",
-      si: "තොප්පියේ මතුපිටේ ස්වභාවය නිරීක්ෂණය කර තෝරන්න.",
+      en: "Observe the surface characteristics of the mushroom cap.",
+      ta: "காளானின் தொப்பியின் மேற்பரப்பு தன்மையைத் தேர்ந்தெடுக்கவும்.",
+      si: "බිම්මලේ තොප්පියේ මතුපිට ස්වභාවය නිරීක්ෂණය කරන්න.",
     },
     options: [
       {
-        value: "smooth-dry",
-        en: "Smooth / Dry",
-        ta: "மென்மையான / உலர்ந்த",
-        si: "සුමට / වියළි",
+        value: "f",
+        en: "Fibrous",
+        ta: "நார்ச்சத்து கொண்ட",
+        si: "තන්තුමය",
       },
       {
-        value: "warty-scaly",
-        en: "Warty / Scaly",
-        ta: "மரு / செதில் போன்ற",
-        si: "ගැටිති සහිත / කොරපොතු සහිත",
+        value: "g",
+        en: "Grooves",
+        ta: "வரிகள் / பள்ளங்கள்",
+        si: "රේඛා / කට්ට",
       },
       {
-        value: "slimy",
-        en: "Slimy / Sticky",
-        ta: "பிசுபிசுப்பான / ஒட்டும்",
-        si: "ලිස්සන / ඇලෙන සුළු",
+        value: "y",
+        en: "Scaly",
+        ta: "செதில் போன்ற",
+        si: "පොතු සහිත",
       },
       {
-        value: "velvety",
-        en: "Velvety / Fibrous",
-        ta: "வெல்வெட் போன்ற / நார்ச்சத்து",
-        si: "වෙල්වට් වැනි / තන්තුමය",
-      },
-      {
-        value: "honeycomb",
-        en: "Honeycomb / Pitted",
-        ta: "தேன்கூடு / குழிவான",
-        si: "මී වදය වැනි / කුහර සහිත",
-        description: "Honeycomb, pitted or brain-like",
+        value: "s",
+        en: "Smooth",
+        ta: "மென்மையான",
+        si: "සිනිඳු",
       },
     ],
   },
@@ -206,48 +219,39 @@ const FEATURES: Feature[] = [
   {
     key: "undersideType",
     title: {
-      en: "Gill / Underside Type",
-      ta: "கில் / அடிப்பகுதி வகை",
-      si: "ගිල් / යටි පැත්තේ වර්ගය",
+      en: "Gill Attachment",
+      ta: "கில்களின் இணைப்பு",
+      si: "ගිල්ස් කඳට සම්බන්ධ වන ආකාරය",
     },
     subtitle: {
-      en: "Identify the structure visible underneath the cap.",
-      ta: "தொப்பியின் கீழ்பகுதியில் காணப்படும் அமைப்பைத் தேர்ந்தெடுக்கவும்.",
-      si: "තොප්පිය යටින් පෙනෙන ව්‍යුහය හඳුනා ගන්න.",
+      en: "Observe how the gills attach to the mushroom stalk.",
+      ta: "கில்கள் காளானின் தண்டுடன் எவ்வாறு இணைகின்றன என்பதைத் தேர்ந்தெடுக்கவும்.",
+      si: "ගිල්ස් බිම්මලේ දණ්ඩට සම්බන්ධ වන ආකාරය නිරීක්ෂණය කරන්න.",
     },
     options: [
       {
-        value: "gills",
-        en: "Gills",
-        ta: "கில்கள்",
-        si: "ගිල්",
-        description: "Blade-like",
+        value: "a",
+        en: "Attached",
+        ta: "இணைந்த",
+        si: "සම්බන්ධිත",
       },
       {
-        value: "pores",
-        en: "Pores",
-        ta: "துளைகள்",
-        si: "සිදුරු",
-        description: "Sponge-like",
+        value: "d",
+        en: "Descending",
+        ta: "கீழ்நோக்கி இறங்கும்",
+        si: "පහළට බැසෙන",
       },
       {
-        value: "spines",
-        en: "Spines / Teeth",
-        ta: "முள் / பற்கள்",
-        si: "කටු / දත් වැනි",
+        value: "f",
+        en: "Free",
+        ta: "சுதந்திரமான",
+        si: "නිදහස්",
       },
       {
-        value: "honeycomb-pits",
-        en: "Honeycomb Pits",
-        ta: "தேன்கூடு குழிகள்",
-        si: "මී වද වැනි කුහර",
-      },
-      {
-        value: "no-gills",
-        en: "No Gills",
-        ta: "கில்கள் இல்லை",
-        si: "ගිල් නොමැත",
-        description: "Folds / gleba",
+        value: "n",
+        en: "Notched",
+        ta: "வெட்டுப்பள்ளம் கொண்ட",
+        si: "කැපුම් සහිත",
       },
     ],
   },
@@ -255,46 +259,33 @@ const FEATURES: Feature[] = [
   {
     key: "ringPresence",
     title: {
-      en: "Ring (Annulus) Presence",
-      ta: "வளையம் (Annulus) இருப்பு",
-      si: "මුදු (Annulus) පැවතීම",
+      en: "Ring Number",
+      ta: "வளையங்களின் எண்ணிக்கை",
+      si: "මුදු ගණන",
     },
     subtitle: {
-      en: "Check whether a ring structure is present on the stalk.",
-      ta: "தண்டில் வளைய அமைப்பு உள்ளதா என்பதைத் தேர்ந்தெடுக்கவும்.",
-      si: "දණ්ඩේ මුදු ව්‍යුහයක් තිබේදැයි හඳුනා ගන්න.",
+      en: "Identify the number of visible ring structures on the stalk.",
+      ta: "தண்டில் காணப்படும் வளையங்களின் எண்ணிக்கையைத் தேர்ந்தெடுக்கவும்.",
+      si: "දණ්ඩේ පෙනෙන මුදු ව්‍යුහයන්ගේ ගණන තෝරන්න.",
     },
     options: [
       {
-        value: "yes",
-        en: "Yes - Ring Present",
-        ta: "ஆம் - வளையம் உள்ளது",
-        si: "ඔව් - මුදුව ඇත",
+        value: "n",
+        en: "None",
+        ta: "இல்லை",
+        si: "නැත",
       },
       {
-        value: "no",
-        en: "No - No Ring",
-        ta: "இல்லை - வளையம் இல்லை",
-        si: "නැත - මුදුවක් නැත",
+        value: "o",
+        en: "One",
+        ta: "ஒன்று",
+        si: "එකක්",
       },
       {
-        value: "partial",
-        en: "Partial / Skirt-like",
-        ta: "பகுதி / பாவாடை போன்ற",
-        si: "අර්ධ / සායක් වැනි",
-      },
-      {
-        value: "ring-zone",
-        en: "Ring Zone Only",
-        ta: "வளையப் பகுதி மட்டும்",
-        si: "මුදු කලාපය පමණි",
-        description: "No complete ring",
-      },
-      {
-        value: "not-visible",
-        en: "Not Visible / Broken",
-        ta: "தெரியவில்லை / உடைந்தது",
-        si: "නොපෙනේ / කැඩී ඇත",
+        value: "t",
+        en: "Two",
+        ta: "இரண்டு",
+        si: "දෙකක්",
       },
     ],
   },
@@ -302,48 +293,45 @@ const FEATURES: Feature[] = [
   {
     key: "volvaPresence",
     title: {
-      en: "Volva (Base Cup) Presence",
-      ta: "வால்வா (அடிப்பகுதி கிண்ணம்) இருப்பு",
-      si: "Volva (පාදක කෝප්පය) පැවතීම",
+      en: "Stalk Root Type",
+      ta: "தண்டின் அடிப்பகுதி வகை",
+      si: "දණ්ඩේ මුල් වර්ගය",
     },
     subtitle: {
-      en: "Observe the base of the mushroom for a cup or swollen structure.",
-      ta: "காளானின் அடிப்பகுதியில் கிண்ணம் அல்லது வீங்கிய அமைப்பு உள்ளதா என்பதைப் பார்க்கவும்.",
-      si: "බිම්මලේ පාදයේ කෝප්පයක් හෝ ඉදිමුණු ව්‍යුහයක් තිබේදැයි බලන්න.",
+      en: "Observe the structure and form of the stalk root.",
+      ta: "காளானின் தண்டின் அடிப்பகுதி அமைப்பைத் தேர்ந்தெடுக்கவும்.",
+      si: "බිම්මලේ දණ්ඩේ මුල් කොටසේ ව්‍යුහය නිරීක්ෂණය කරන්න.",
     },
     options: [
       {
-        value: "cup",
-        en: "Yes - Cup / Sack",
-        ta: "ஆம் - கிண்ணம் / பை",
-        si: "ඔව් - කෝප්පයක් / බෑගයක්",
-        description: "At the base",
+        value: "b",
+        en: "Bulbous",
+        ta: "குமிழ் போன்ற",
+        si: "බල්බාකාර",
       },
       {
-        value: "clean",
-        en: "No - Clean Base",
-        ta: "இல்லை - சுத்தமான அடிப்பகுதி",
-        si: "නැත - පිරිසිදු පාදය",
+        value: "c",
+        en: "Club",
+        ta: "கிளப் வடிவம்",
+        si: "මුගුරු හැඩය",
       },
       {
-        value: "basal-bulb",
-        en: "Basal Bulb",
-        ta: "அடிப்பகுதி வீக்கம்",
-        si: "පාදක බල්බය",
-        description: "Swollen base",
+        value: "e",
+        en: "Equal",
+        ta: "சமமான",
+        si: "සමාන",
       },
       {
-        value: "concentric-rings",
-        en: "Concentric Rings",
-        ta: "மைய வளையங்கள்",
-        si: "සංකේන්ද්‍රික මුදු",
-        description: "At the base",
+        value: "r",
+        en: "Rooted",
+        ta: "வேர் கொண்ட",
+        si: "මුල් සහිත",
       },
       {
-        value: "not-visible",
-        en: "Not Visible / Underground",
-        ta: "தெரியவில்லை / நிலத்தடியில்",
-        si: "නොපෙනේ / භූගත",
+        value: "z",
+        en: "Rhizomorphs",
+        ta: "வேர் போன்ற நார்கள்",
+        si: "රයිසෝමෝර්ෆ්",
       },
     ],
   },
@@ -353,58 +341,79 @@ const FEATURES: Feature[] = [
     title: {
       en: "Gill Color",
       ta: "கில்களின் நிறம்",
-      si: "ගිල් වල වර්ණය",
+      si: "ගිල්ස් වල වර්ණය",
     },
     subtitle: {
-      en: "Select the visible color of the gills or underside.",
-      ta: "கில்கள் அல்லது அடிப்பகுதியில் காணப்படும் நிறத்தைத் தேர்ந்தெடுக்கவும்.",
-      si: "ගිල් හෝ යටි පැත්තේ පෙනෙන වර්ණය තෝරන්න.",
+      en: "Select the visible color of the mushroom gills.",
+      ta: "கில்களில் காணப்படும் நிறத்தைத் தேர்ந்தெடுக்கவும்.",
+      si: "බිම්මලේ ගිල්ස් වල පෙනෙන වර්ණය තෝරන්න.",
     },
     options: [
       {
-        value: "white-cream",
-        en: "White / Cream",
-        ta: "வெள்ளை / கிரீம்",
-        si: "සුදු / ක්‍රීම්",
-        description: "White, cream or pale",
+        value: "k",
+        en: "Black",
+        ta: "கருப்பு",
+        si: "කළු",
       },
       {
-        value: "pink-red",
-        en: "Pink / Red / Salmon",
-        ta: "இளஞ்சிவப்பு / சிவப்பு / சால்மன்",
-        si: "රෝස / රතු / සැමන්",
+        value: "n",
+        en: "Brown",
+        ta: "பழுப்பு",
+        si: "දුඹුරු",
       },
       {
-        value: "brown",
-        en: "Brown / Reddish-Brown",
-        ta: "பழுப்பு / சிவப்பு-பழுப்பு",
-        si: "දුඹුරු / රතු-දුඹුරු",
+        value: "b",
+        en: "Buff",
+        ta: "மங்கலான மஞ்சள்-பழுப்பு",
+        si: "ලා කහ-දුඹුරු",
       },
       {
-        value: "black-grey",
-        en: "Black / Grey",
-        ta: "கருப்பு / சாம்பல்",
-        si: "කළු / අළු",
-        description: "Blackish-brown or mottled",
+        value: "g",
+        en: "Gray",
+        ta: "சாம்பல்",
+        si: "අළු",
       },
       {
-        value: "yellow-orange",
-        en: "Yellow / Orange / Buff",
-        ta: "மஞ்சள் / செம்மஞ்சள் / வெளிர் பழுப்பு",
-        si: "කහ / තැඹිලි / ලා දුඹුරු",
+        value: "r",
+        en: "Green",
+        ta: "பச்சை",
+        si: "කොළ",
       },
       {
-        value: "purple-green",
-        en: "Purple / Green / Unusual",
-        ta: "ஊதா / பச்சை / அசாதாரண நிறம்",
-        si: "දම් / කොළ / අසාමාන්‍ය",
+        value: "o",
+        en: "Orange",
+        ta: "செம்மஞ்சள்",
+        si: "තැඹිලි",
       },
       {
-        value: "not-applicable",
-        en: "Not Applicable",
-        ta: "பொருந்தாது",
-        si: "අදාළ නොවේ",
-        description: "Pored / no gills",
+        value: "p",
+        en: "Pink",
+        ta: "இளஞ்சிவப்பு",
+        si: "රෝස",
+      },
+      {
+        value: "u",
+        en: "Purple",
+        ta: "ஊதா",
+        si: "දම්",
+      },
+      {
+        value: "e",
+        en: "Red",
+        ta: "சிவப்பு",
+        si: "රතු",
+      },
+      {
+        value: "w",
+        en: "White",
+        ta: "வெள்ளை",
+        si: "සුදු",
+      },
+      {
+        value: "y",
+        en: "Yellow",
+        ta: "மஞ்சள்",
+        si: "කහ",
       },
     ],
   },
@@ -417,36 +426,22 @@ const FEATURES: Feature[] = [
       si: "දණ්ඩේ හැඩය",
     },
     subtitle: {
-      en: "Identify the shape and structure of the mushroom stalk.",
-      ta: "காளானின் தண்டின் வடிவத்தையும் அமைப்பையும் தேர்ந்தெடுக்கவும்.",
-      si: "බිම්මල් දණ්ඩේ හැඩය සහ ව්‍යුහය හඳුනා ගන්න.",
+      en: "Identify the overall shape of the mushroom stalk.",
+      ta: "காளானின் தண்டின் ஒட்டுமொத்த வடிவத்தைத் தேர்ந்தெடுக்கவும்.",
+      si: "බිම්මලේ දණ්ඩේ සමස්ත හැඩය හඳුනා ගන්න.",
     },
     options: [
       {
-        value: "club-shaped",
-        en: "Enlarging Toward Base",
-        ta: "அடிப்பகுதியை நோக்கி பெரிதாகும்",
-        si: "පාදය දෙසට විශාල වන",
-        description: "Club-shaped",
+        value: "e",
+        en: "Enlarging",
+        ta: "அடிப்பகுதியில் அகலமான",
+        si: "පහළට පුළුල් වන",
       },
       {
-        value: "tapering",
-        en: "Tapering Toward Base",
-        ta: "அடிப்பகுதியை நோக்கி குறுகும்",
-        si: "පාදය දෙසට සිහින් වන",
-      },
-      {
-        value: "cylindrical",
-        en: "Equal / Cylindrical",
-        ta: "சமமான / உருளை வடிவம்",
-        si: "සමාන / සිලින්ඩරාකාර",
-        description: "Same width throughout",
-      },
-      {
-        value: "absent",
-        en: "Absent / No True Stalk",
-        ta: "இல்லை / உண்மையான தண்டு இல்லை",
-        si: "නැත / සැබෑ දණ්ඩක් නැත",
+        value: "t",
+        en: "Tapering",
+        ta: "அடிப்பகுதியில் குறுகும்",
+        si: "පහළට සිහින් වන",
       },
     ],
   },
@@ -493,52 +488,53 @@ export default function MorphologicalFeaturesScreen() {
   };
 
   const handleContinue = () => {
-    if (completedCount !== FEATURES.length) {
-      Alert.alert(
-        "Incomplete Information",
-        "Please select an option for all 8 morphological features.",
-      );
-      return;
-    }
+  if (completedCount !== FEATURES.length) {
+    Alert.alert(
+      "Incomplete Information",
+      "Please select an option for all 8 morphological features.",
+    );
+    return;
+  }
 
-    /*
-     * DEMO DATA STRUCTURE
-     *
-     * This structure is intentionally prepared for the
-     * NEW XGBoost model.
-     *
-     * No old XGBoost model or old mapping is used here.
-     */
-    const featureData = {
-      capShape: selectedFeatures.capShape,
-      capColor: selectedFeatures.capColor,
-      capSurfaceTexture: selectedFeatures.capSurfaceTexture,
-      undersideType: selectedFeatures.undersideType,
-      ringPresence: selectedFeatures.ringPresence,
-      volvaPresence: selectedFeatures.volvaPresence,
-      gillColor: selectedFeatures.gillColor,
-      stalkShape: selectedFeatures.stalkShape,
-    };
-
-    console.log("NEW MORPHOLOGICAL FEATURE DATA:");
-    console.log(JSON.stringify(featureData, null, 2));
-
-    /*
-     * The new XGBoost model is still being prepared.
-     * Therefore this page currently passes the collected
-     * features to the next demo stage.
-     *
-     * The old XGBoost API is NOT called here.
-     */
-    router.push({
-      pathname: "/scanning",
-      params: {
-        image: image || "",
-        featureData: JSON.stringify(featureData),
-        mode: "morphological-demo",
-      },
-    });
+  /*
+   * FINAL XGBOOST MORPHOLOGY DATA
+   *
+   * The values stored in selectedFeatures are already
+   * the categorical codes expected by the final XGBoost model.
+   *
+   * Feature order:
+   * 1. cap-shape
+   * 2. cap-color
+   * 3. cap-surface
+   * 4. gill-attachment
+   * 5. ring-number
+   * 6. stalk-root
+   * 7. gill-color
+   * 8. stalk-shape
+   */
+  const featureData = {
+    "cap-shape": selectedFeatures.capShape,
+    "cap-color": selectedFeatures.capColor,
+    "cap-surface": selectedFeatures.capSurfaceTexture,
+    "gill-attachment": selectedFeatures.undersideType,
+    "ring-number": selectedFeatures.ringPresence,
+    "stalk-root": selectedFeatures.volvaPresence,
+    "gill-color": selectedFeatures.gillColor,
+    "stalk-shape": selectedFeatures.stalkShape,
   };
+
+  console.log("FINAL XGBOOST MORPHOLOGY DATA:");
+  console.log(JSON.stringify(featureData, null, 2));
+
+  router.push({
+    pathname: "/scanning",
+    params: {
+      image: image || "",
+      featureData: JSON.stringify(featureData),
+      mode: "multimodal",
+    },
+  });
+};
 
   const selectedLanguage = useMemo(
     () => languageNames[language],
@@ -871,9 +867,7 @@ export default function MorphologicalFeaturesScreen() {
             </Text>
 
             <Text style={styles.demoText}>
-              The new XGBoost model is currently being prepared.
-              Your selected features will be passed to the next
-              analysis stage without using the previous model.
+             The morphological features are used as input to the XGBoost model for multimodal classification.
             </Text>
           </View>
         </View>

@@ -1,0 +1,75 @@
+{
+    "project": "FungiX",
+    "system": "Mushroom Identification Using a Mobile Application with Image Recognition and Macro-Morphological Features",
+    "model_version": "ViT-Small + Domain-Adapted XGBoost + Fixed Probability Fusion",
+    "task": "Binary mushroom classification",
+    "classes": {
+        "0": "Edible",
+        "1": "Poisonous"
+    },
+    "image_branch": {
+        "architecture": "vit_small_patch16_224",
+        "feature_dimension": 384,
+        "input_size": [
+            3,
+            224,
+            224
+        ],
+        "mean": [
+            0.5,
+            0.5,
+            0.5
+        ],
+        "std": [
+            0.5,
+            0.5,
+            0.5
+        ],
+        "classifier": "StandardScaler + LogisticRegression"
+    },
+    "morphology_branch": {
+        "model": "Domain-adapted XGBoost",
+        "features": [
+            "cap-shape",
+            "cap-color",
+            "cap-surface",
+            "gill-attachment",
+            "ring-number",
+            "stalk-root",
+            "gill-color",
+            "stalk-shape"
+        ],
+        "missing_value_policy": "Missing values remain NaN. XGBoost handles missing values natively."
+    },
+    "fusion": {
+        "method": "Fixed probability fusion",
+        "vit_weight": 0.7,
+        "xgboost_weight": 0.3,
+        "formula": "P_fusion = 0.70 * P_ViT + 0.30 * P_XGBoost",
+        "weights_tuned_on_protected_54": false
+    },
+    "protected_evaluation": {
+        "n": 54,
+        "edible": 36,
+        "poisonous": 18,
+        "training_used": false,
+        "tuning_used": false,
+        "category_mapping_used": false
+    },
+    "final_performance": {
+        "vit_accuracy": 0.8889,
+        "xgboost_accuracy": 0.9259,
+        "fusion_accuracy": 0.8889,
+        "vit_correct": 48,
+        "xgboost_correct": 50,
+        "fusion_correct": 48
+    },
+    "deployment_validation": {
+        "complete_morphology_smoke_test": true,
+        "missing_morphology_smoke_test": true,
+        "probability_sum_verified": true,
+        "fusion_formula_verified": true
+    },
+    "generated_at": "2026-09-04T05:29:45.247312",
+    "important_note": "This system is an educational/decision-support tool and should not be treated as an expert replacement or sole basis for consuming a wild mushroom."
+}

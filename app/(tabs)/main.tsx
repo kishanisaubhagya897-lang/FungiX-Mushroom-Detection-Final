@@ -8,6 +8,7 @@ import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
   StatusBar,
@@ -104,6 +105,81 @@ export default function MainScreen() {
     }, []),
   );
 
+  const checkMushroomBeforeMorphology = async (imageUri: string) => {
+    try {
+      const API_URL = "http://10.107.13.29:8000/screen";
+
+      const fileName =
+        imageUri.split("/").pop() || "mushroom.jpg";
+
+      const fileExtension =
+        fileName.split(".").pop()?.toLowerCase();
+
+      const mimeType =
+        fileExtension === "png"
+          ? "image/png"
+          : "image/jpeg";
+
+      const formData = new FormData();
+
+      formData.append(
+        "image",
+        {
+          uri: imageUri,
+          name: fileName,
+          type: mimeType,
+        } as any,
+      );
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const responseText = await response.text();
+
+      console.log("CLIP Screen Status:", response.status);
+      console.log("CLIP Screen Response:", responseText);
+
+      if (!response.ok) {
+        throw new Error(
+          `CLIP screening failed (${response.status}): ${responseText}`,
+        );
+      }
+
+      let result;
+
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error("CLIP screening returned invalid JSON.");
+      }
+
+      if (!result.is_mushroom) {
+        Alert.alert(
+          "Not a Mushroom",
+          "The selected image does not appear to be a mushroom. Please capture or select a clear mushroom image.",
+        );
+
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error(
+        "CLIP Screening Error:",
+        error,
+      );
+
+      Alert.alert(
+        "Image Screening Error",
+        "Unable to verify the image. Please try again.",
+      );
+
+      return false;
+    }
+  };
+
   const takePhoto = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     if (!permission.granted) return;
@@ -112,10 +188,17 @@ export default function MainScreen() {
       quality: 1,
     });
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      const isMushroom =
+        await checkMushroomBeforeMorphology(imageUri);
+
+      if (!isMushroom) return;
+
       router.push({
         pathname: "/morphological-features",
         params: {
-          image: result.assets[0].uri,
+          image: imageUri,
         },
       });
     }
@@ -127,10 +210,17 @@ export default function MainScreen() {
       quality: 1,
     });
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      const isMushroom =
+        await checkMushroomBeforeMorphology(imageUri);
+
+      if (!isMushroom) return;
+
       router.push({
         pathname: "/morphological-features",
         params: {
-          image: result.assets[0].uri,
+          image: imageUri,
         },
       });
     }

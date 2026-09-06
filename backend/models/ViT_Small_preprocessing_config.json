@@ -1,0 +1,27 @@
+{
+    "model_name": "vit_small_patch16_224",
+    "feature_dimension": 384,
+    "input_size": [
+        3,
+        224,
+        224
+    ],
+    "mean": [
+        0.5,
+        0.5,
+        0.5
+    ],
+    "std": [
+        0.5,
+        0.5,
+        0.5
+    ],
+    "interpolation": "bicubic",
+    "crop_pct": 0.9,
+    "class_mapping": {
+        "0": "Edible",
+        "1": "Poisonous"
+    },
+    "fusion_weight_vit": 0.7,
+    "fusion_weight_xgboost": 0.3
+}

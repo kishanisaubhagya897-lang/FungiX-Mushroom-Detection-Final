@@ -1,0 +1,13 @@
+{
+    "package": "FungiX_Final_Multimodal_Deployment",
+    "artifact_count": 7,
+    "files": [
+        "README.txt",
+        "ViT_Small_preprocessing_config.json",
+        "ViT_Small_pretrained_backbone.pth",
+        "ViT_Small_transfer_classifier.joblib",
+        "XGBoost_domain_adapted_exact54.json",
+        "XGBoost_morphology_category_mapping.json",
+        "deployment_config.json"
+    ]
+}

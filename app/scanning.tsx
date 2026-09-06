@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import React, { useEffect, useRef } from "react";
 import {
+  Alert,
   Animated,
   Image,
   StyleSheet,
@@ -36,7 +37,7 @@ export default function Scanning() {
 
     animation.start();
 
-    processMorphologicalDemo();
+    processMultimodalPrediction();
 
     return () => {
       animation.stop();
@@ -50,7 +51,8 @@ export default function Scanning() {
    *
    * The previous XGBoost model has been completely removed.
    *
-   * The new XGBoost model is still being prepared.
+   *
+  * Sends the image and morphological features to the final multimodal model API.
    *
    * For now:
    *
@@ -66,162 +68,287 @@ export default function Scanning() {
    * the prediction API will be connected here.
    */
 
-  const processMorphologicalDemo = async () => {
-    try {
-      console.log("=================================");
-      console.log("MORPHOLOGICAL ANALYSIS - DEMO");
-      console.log("=================================");
+  const processMultimodalPrediction = async () => {
+  try {
+    console.log("=================================");
+    console.log("FUNGI-X MULTIMODAL ANALYSIS");
+    console.log("=================================");
 
-      console.log("Received New Feature Data:");
-      console.log(featureData);
-
-      /**
-       * Current new feature structure:
-       *
-       * capShape
-       * capColor
-       * capSurfaceTexture
-       * undersideType
-       * ringPresence
-       * volvaPresence
-       * gillColor
-       * stalkShape
-       */
-
-      if (!featureData) {
-        console.warn("No morphological feature data received.");
-      }
-
-      /**
-       * -----------------------------------------------------
-       * TEMPORARY DEMO RESULT
-       * -----------------------------------------------------
-       *
-       * This is NOT an XGBoost prediction.
-       *
-       * It only stores the morphological feature data so
-       * that the complete application flow can be tested
-       * before the new model is deployed.
-       */
-
-      const demoResult = {
-        mushroomName: "Morphological Analysis Pending",
-
-        scientificName: "New XGBoost Model - Preparing",
-
-        type: "Pending",
-
-        confidence: 0,
-
-        imageUrl: image || "",
-
-        description:
-          "Morphological features collected successfully. The new XGBoost model is currently being prepared.",
-
-        habitat: "Pending",
-
-        season: "Pending",
-
-        conditions: "Pending",
-
-        notes:
-          "This is a demonstration result. No mushroom classification has been generated yet. The new XGBoost model will be integrated after model preparation.",
-
-        morphologicalFeatures: featureData || {},
-
-        modelStatus: "development",
-
-        modelName: "New XGBoost Morphological Model",
-
-        scanDate: serverTimestamp(),
-
-        userId: auth.currentUser?.uid || null,
-      };
-
-      console.log("Demo Result:");
-      console.log(demoResult);
-
-      /**
-       * Save the demo scan to Firebase.
-       *
-       * This allows the existing History / Detection
-       * functionality to continue working while the
-       * new model is being prepared.
-       */
-
-      const docRef = await addDoc(
-        collection(db, "detections"),
-        demoResult,
-      );
-
-      /**
-       * Temporary notification
-       */
-
-      await addDoc(collection(db, "notifications"), {
-        title: "Morphological Analysis Completed",
-
-        message:
-          "8 morphological features were successfully collected.",
-
-        type: "info",
-
-        userId: auth.currentUser?.uid || null,
-
-        createdAt: serverTimestamp(),
-      });
-
-      console.log("Demo detection saved:", docRef.id);
-
-      /**
-       * Wait for the scanning animation to complete
-       * before moving to the result screen.
-       */
-
-      setTimeout(() => {
-        router.replace({
-          pathname: "/analysis-complete",
-
-          params: {
-            id: docRef.id,
-
-            image: image || "",
-
-            prediction: "pending",
-
-            modelStatus: "development",
-          },
-        });
-      }, 3000);
-    } catch (error) {
-      console.error(
-        "Morphological Demo Processing Error:",
-        error,
-      );
-
-      /**
-       * Even if Firebase saving fails, move to the
-       * analysis screen so that the application does
-       * not remain stuck on the scanning page.
-       */
-
-      setTimeout(() => {
-        router.replace({
-          pathname: "/analysis-complete",
-
-          params: {
-            id: "demo",
-
-            image: image || "",
-
-            prediction: "pending",
-
-            modelStatus: "development",
-          },
-        });
-      }, 3000);
+    if (!image) {
+      throw new Error("No mushroom image received.");
     }
-  };
+
+    if (!featureData) {
+      throw new Error("No morphological feature data received.");
+    }
+
+    console.log("Image:", image);
+    console.log("Morphology:", featureData);
+
+    // ---------------------------------------------------------
+    // FASTAPI BACKEND
+    // ---------------------------------------------------------
+    // The phone reaches the backend through the PC's Wi-Fi IP.
+    const API_URL = "http://10.107.13.29:8000/predict";
+
+    // ---------------------------------------------------------
+    // PREPARE IMAGE
+    // ---------------------------------------------------------
+    const fileName =
+      image.split("/").pop() || "mushroom.jpg";
+
+    const fileExtension =
+      fileName.split(".").pop()?.toLowerCase();
+
+    const mimeType =
+      fileExtension === "png"
+        ? "image/png"
+        : "image/jpeg";
+
+    const formData = new FormData();
+
+    formData.append(
+      "image",
+      {
+        uri: image,
+        name: fileName,
+        type: mimeType,
+      } as any,
+    );
+
+    // The morphology screen already sends the exact
+    // XGBoost feature names and category codes.
+    formData.append(
+      "morphology",
+      JSON.stringify(featureData),
+    );
+
+    console.log("Sending prediction request...");
+
+    // ---------------------------------------------------------
+    // CALL REAL MULTIMODAL MODEL
+    // ---------------------------------------------------------
+    const response = await fetch(API_URL, {
+      method: "POST",
+      body: formData,
+    });
+
+    const responseText = await response.text();
+
+    console.log("API Status:", response.status);
+    console.log("API Response:", responseText);
+
+    if (!response.ok) {
+      throw new Error(
+        `Prediction API failed (${response.status}): ${responseText}`,
+      );
+    }
+
+    let result;
+
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      throw new Error("Backend returned invalid JSON.");
+    }
+
+    // ---------------------------------------------------------
+    // HANDLE CLIP NON-MUSHROOM REJECTION
+    // ---------------------------------------------------------
+    if (
+      result.prediction === "Not a Mushroom" &&
+      result.gate
+    ) {
+      console.log("=================================");
+      console.log("NON-MUSHROOM IMAGE REJECTED");
+      console.log("=================================");
+      console.log(
+        "Mushroom probability:",
+        result.gate.mushroom_probability,
+      );
+      console.log(
+        "Non-mushroom probability:",
+        result.gate.non_mushroom_probability,
+      );
+
+      Alert.alert(
+        "Not a Mushroom",
+        "The selected image does not appear to be a mushroom. Please capture or select a clear mushroom image.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.back(),
+          },
+        ],
+      );
+
+      return;
+    }
+
+    if (!result.success) {
+      throw new Error(
+        result.detail || "Prediction failed.",
+      );
+    }
+
+    console.log("=================================");
+    console.log("MULTIMODAL PREDICTION SUCCESS");
+    console.log("=================================");
+    console.log("Prediction:", result.prediction);
+    console.log("Confidence:", result.confidence);
+    console.log("ViT:", result.models?.image);
+    console.log("XGBoost:", result.models?.morphology);
+    console.log("Fusion:", result.models?.fusion);
+
+    // ---------------------------------------------------------
+    // SAVE REAL DETECTION TO FIREBASE
+    // ---------------------------------------------------------
+    const prediction =
+      result.prediction === "Poisonous"
+        ? "Poisonous"
+        : "Edible";
+
+    const predictionCode =
+      prediction === "Poisonous"
+        ? "p"
+        : "e";
+
+    const detectionResult = {
+      mushroomName:
+        prediction === "Edible"
+          ? "Edible Mushroom"
+          : "Poisonous Mushroom",
+
+      scientificName:
+        "Species not determined by the classification model",
+
+      type: prediction,
+
+      confidence: Number(result.confidence || 0),
+
+      imageUrl: image,
+
+      description:
+        `The multimodal model classified this specimen as ${prediction}.`,
+
+      habitat: "Not determined",
+
+      season: "Not determined",
+
+      conditions: "Not determined",
+
+      notes:
+        "Prediction generated using ViT-Small image recognition, Domain-Adapted XGBoost morphological analysis, and fixed probability fusion.",
+
+      morphologicalFeatures: featureData,
+
+      modelStatus: "production",
+
+      modelName:
+        "ViT-Small + Domain-Adapted XGBoost + Fixed Probability Fusion",
+
+      prediction: prediction,
+
+      predictionCode: predictionCode,
+
+      probabilities: result.probabilities || {},
+
+      imageModel: result.models?.image || null,
+
+      morphologyModel:
+        result.models?.morphology || null,
+
+      fusionModel:
+        result.models?.fusion || null,
+
+      modelVersion:
+        result.model_version || "",
+
+      safetyNote:
+        result.safety_note || "",
+
+      scanDate: serverTimestamp(),
+
+      userId: auth.currentUser?.uid || null,
+    };
+
+    console.log(
+      "Saving real detection:",
+      detectionResult,
+    );
+
+    const docRef = await addDoc(
+      collection(db, "detections"),
+      detectionResult,
+    );
+
+    // ---------------------------------------------------------
+    // NOTIFICATION
+    // ---------------------------------------------------------
+    await addDoc(collection(db, "notifications"), {
+      title: "Mushroom Analysis Completed",
+
+      message:
+        `The mushroom was classified as ${prediction}.`,
+
+      type: "info",
+
+      userId: auth.currentUser?.uid || null,
+
+      createdAt: serverTimestamp(),
+    });
+
+    console.log(
+      "Real detection saved:",
+      docRef.id,
+    );
+
+    // ---------------------------------------------------------
+    // MOVE TO ANALYSIS COMPLETE
+    // ---------------------------------------------------------
+    setTimeout(() => {
+      router.replace({
+        pathname: "/analysis-complete",
+
+        params: {
+          id: docRef.id,
+
+          image: image,
+
+          prediction: predictionCode,
+
+          modelStatus: "production",
+
+          confidence: String(
+            result.confidence || 0,
+          ),
+        },
+      });
+    }, 3000);
+  } catch (error) {
+    console.error(
+      "Multimodal Processing Error:",
+      error,
+    );
+
+    // Keep the existing scanning flow from getting stuck.
+    setTimeout(() => {
+      router.replace({
+        pathname: "/analysis-complete",
+
+        params: {
+          id: "error",
+
+          image: image || "",
+
+          prediction: "error",
+
+          modelStatus: "error",
+        },
+      });
+    }, 3000);
+  }
+};
 
   const translateY = scanAnim.interpolate({
     inputRange: [0, 1],

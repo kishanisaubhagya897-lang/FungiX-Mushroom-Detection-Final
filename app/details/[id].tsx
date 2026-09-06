@@ -1,18 +1,26 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   Image,
-  TouchableOpacity,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { db } from "../../firebaseConfig";
+
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams();
+
+  const [detection, setDetection] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  
 
   const prediction =
   typeof params.prediction === "string"
@@ -22,11 +30,43 @@ export default function DetailsScreen() {
 const isPoisonous = prediction === "p";
 
   const image =
-    typeof params.image === "string"
-      ? params.image
-      : params.image?.[0];
+  typeof params.image === "string"
+    ? params.image
+    : params.image?.[0];
 
-  return (
+  React.useEffect(() => {
+  const loadDetection = async () => {
+    if (!params.id) return;
+
+    try {
+      const detectionRef = doc(
+        db,
+        "detections",
+        String(params.id)
+      );
+
+      const detectionSnap = await getDoc(detectionRef);
+
+      if (detectionSnap.exists()) {
+        setDetection(detectionSnap.data());
+      }
+    } catch (error) {
+      console.error("Failed to load detection:", error);
+    }
+  };
+
+  loadDetection();
+}, [params.id]);
+
+const finalConfidence = Number(
+  detection?.confidence || 0
+);
+
+const finalConfidencePercent = Math.round(
+  finalConfidence * 100
+);
+
+return (
     <SafeAreaView
   style={[
     styles.container,
@@ -68,35 +108,111 @@ const isPoisonous = prediction === "p";
 
         {/* TITLE */}
        <Text style={styles.name}>
-  {isPoisonous
-    ? "Poisonous Mushroom"
-    : "Edible Mushroom"}
-</Text>
+          {isPoisonous
+            ? "Poisonous Classification"
+            : "Edible Classification"}
+        </Text>
 
         <View style={styles.scientificRow}>
         <Ionicons
-  name="flask-outline"
-  size={18}
-  color="#A8D5BA"
-/>
+          name="flask-outline"
+          size={18}
+          color="#A8D5BA"
+        />
           <Text style={styles.scientific}>
-  {isPoisonous
-    ? "Potentially Toxic Species"
-    : "Cantharellus cibarius"}
-</Text>
+            Species not determined by this model
+          </Text>
         </View>
+
+          {/* MODEL CONFIDENCE */}
+          <View
+            style={[
+              styles.card,
+              {
+                backgroundColor: isPoisonous
+                  ? "#991B1B"
+                  : "#1B4332",
+              },
+            ]}
+          >
+            <View style={styles.cardHeader}>
+              <Ionicons
+                name="analytics-outline"
+                size={22}
+                color="#52B788"
+              />
+              <Text style={styles.cardTitle}>
+                Model Confidence
+              </Text>
+            </View>
+
+            <Text style={styles.cardText}>
+              Final multimodal prediction: {finalConfidencePercent}%
+            </Text>
+          </View>
+
+
+            {/* MODEL BREAKDOWN */}
+      <View
+        style={[
+          styles.card,
+          {
+            backgroundColor: isPoisonous
+              ? "#991B1B"
+              : "#1B4332",
+          },
+        ]}
+      >
+        <View style={styles.cardHeader}>
+          <Ionicons
+            name="git-network-outline"
+            size={22}
+            color="#52B788"
+          />
+          <Text style={styles.cardTitle}>
+            AI Model Breakdown
+          </Text>
+        </View>
+
+        <Text style={styles.cardText}>
+          ViT-Small:{" "}
+          {Math.round(
+            Number(
+              detection?.imageModel?.probabilities?.[
+                isPoisonous ? "Poisonous" : "Edible"
+              ] || 0
+            ) * 100
+          )}%
+        </Text>
+
+        <Text style={styles.cardText}>
+          XGBoost:{" "}
+          {Math.round(
+            Number(
+              detection?.morphologyModel?.probabilities?.[
+                isPoisonous ? "Poisonous" : "Edible"
+              ] || 0
+            ) * 100
+          )}%
+        </Text>
+
+        <Text style={styles.cardText}>
+          Fusion: {finalConfidencePercent}%
+        </Text>
+      </View>
+
 
         {/* DESCRIPTION */}
        <View
-  style={[
-    styles.card,
-    {
-      backgroundColor: isPoisonous
-        ? "#991B1B"
-        : "#1B4332",
-    },
-  ]}
->
+          style={[
+            styles.card,
+            {
+              backgroundColor: isPoisonous
+                ? "#991B1B"
+                : "#1B4332",
+            },
+          ]}
+        >
           <View style={styles.cardHeader}>
             <Ionicons
               name="document-text-outline"
@@ -109,7 +225,7 @@ const isPoisonous = prediction === "p";
          <Text style={styles.cardText}>
   {isPoisonous
     ? "This mushroom has been classified as potentially poisonous by the AI model. Consumption is not recommended."
-    : "This mushroom has been classified as edible by the AI model and appears safe based on the selected features."}
+: "This mushroom has been classified as edible by the AI model based on the selected image and morphological features."}
 </Text>
         </View>
 
@@ -134,8 +250,7 @@ const isPoisonous = prediction === "p";
           </View>
 
           <Text style={styles.cardText}>
-            Usually found in mixed forests near oak, birch,
-            and beech trees.
+            {detection?.habitat || "Not determined by the model."}
           </Text>
         </View>
 
@@ -160,7 +275,7 @@ const isPoisonous = prediction === "p";
           </View>
 
           <Text style={styles.cardText}>
-            Late summer through autumn.
+            {detection?.season || "Not determined by the model."}
           </Text>
         </View>
 
@@ -185,7 +300,7 @@ const isPoisonous = prediction === "p";
           </View>
 
           <Text style={styles.cardText}>
-            Thrives in moist woodland soil and shaded conditions.
+            {detection?.conditions || "Not determined by the model."}
           </Text>
         </View>
 
