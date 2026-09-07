@@ -89,7 +89,7 @@ export default function Scanning() {
     // FASTAPI BACKEND
     // ---------------------------------------------------------
     // The phone reaches the backend through the PC's Wi-Fi IP.
-    const API_URL = "http://10.107.13.29:8000/predict";
+    const API_URL = "http://192.168.34.29:8000/predict";
 
     // ---------------------------------------------------------
     // PREPARE IMAGE

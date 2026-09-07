@@ -107,7 +107,7 @@ export default function MainScreen() {
 
   const checkMushroomBeforeMorphology = async (imageUri: string) => {
     try {
-      const API_URL = "http://10.107.13.29:8000/screen";
+      const API_URL = "http://192.168.34.29:8000/screen";
 
       const fileName =
         imageUri.split("/").pop() || "mushroom.jpg";
