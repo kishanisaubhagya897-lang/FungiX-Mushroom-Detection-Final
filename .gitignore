@@ -57,3 +57,8 @@ backend/main_old_backup.py
 backend/morphological-features.txt
 
 backend/models/clip_gate.zip
+
+# Final ML model weights (stored separately)
+backend/models/ViT_Small_pretrained_backbone.pth
+backend/models/ViT_Small_transfer_classifier.joblib
+backend/models/clip_gate/model.safetensors
